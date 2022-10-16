@@ -1,0 +1,41 @@
+===================================
+
+Student account (Type 1):
+
+name (unmutable)
+id (unmutable)
+password (mutable)
+Have 1 IP & Mac address (unmutable)
+
+Student:
+- Login (if first time: Register IP address)
+- Check-in (time, class)
+- Check check-in history
+- Change password
+
+=====================================
+
+Teacher Account (Type 2):
+
+name
+password
+class lists
+Students account list
+
+Teacher:
+- Login
+- Change password 
+- Select class (show attendance list)
+- import class list & generate accounts for students
+- edit registered mac address of students.
+- Start/Stop class (session)
+- Start/Stop checking attendance
+- Save attendance list of the session (delete attendance check if student miss a attendance check).
+- Modify attendance
+- Export attendance list of selected class & session info.
+
+=====================================
+
+Class:
+Students List: (Name/ ID/ mail/ account)
+Attendance List: (Name/ ID/ Time/ Time/ ...)
