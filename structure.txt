@@ -2,15 +2,15 @@
 
 Student account (Type 1):
 
-name (unmutable)
-id (unmutable)
-password (mutable)
-Have 1 IP & Mac address (unmutable)
+name (fixed)
+id (fixed, unique)
+password (changeable)
+Have 1 IP & Mac address (fixed, unique)
 
 Student:
-- Login (if first time: Register IP address)
-- Check-in (time, class)
-- Check check-in history
+- Login 
+- Check-in (time, class) - Nhân 
+- Check check-in history - Nhân 
 - Change password
 
 =====================================
@@ -27,12 +27,12 @@ Teacher:
 - Change password 
 - Select class (show attendance list)
 - import class list & generate accounts for students
-- edit registered mac address of students.
-- Start/Stop class (session)
-- Start/Stop checking attendance
-- Save attendance list of the session (delete attendance check if student miss a attendance check).
-- Modify attendance
-- Export attendance list of selected class & session info.
+- edit registered mac address of students. - Nhân 
+- Start/Stop class (session) - Nhân 
+- Start/Stop checking attendance - Nhân 
+- Save attendance list of the session (delete attendance check if student miss a attendance check). - Nhân
+- Modify attendance 
+- Export attendance list of selected class & session info. 
 
 =====================================
 
