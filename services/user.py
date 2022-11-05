@@ -1,16 +1,16 @@
 from models import *
 import re
-import auth
+from services import auth
 
 
 def change_password(session, username, password, newpassword, confirmpassword):
+    if  newpassword != confirmpassword:
+        return (False, "Incorrrect confirmation of new password")
     user = session.query(User).filter_by(username=username).first()
     if not auth.verify_password(password, user.password):
         return (False, "Incorrect Password")
     elif password == newpassword:
         return (False, "New password must be different from current password")
-    elif newpassword != confirmpassword:
-        return (False, "Incorrrect confirmation of new password")
     else:
         newpasswordhash = auth.get_password_hash(newpassword)
         user.password = newpasswordhash

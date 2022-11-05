@@ -9,7 +9,7 @@ class User(Base):
     __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True)
-    account_type = Column(Integer, server_default=1) # 1 = student, 2 = teacher
+    account_type = Column(Integer) # 1 = student, 2 = teacher
     username = Column(String(200), nullable = False)
     password = Column(String(1000), nullable = False)
     fullname = Column(String(200), nullable = False)
@@ -38,7 +38,7 @@ class Session(Base):
     lecture_id = Column(Integer, ForeignKey('lectures.id'), nullable = False)
     name = Column(String(2000), nullable=False)
     start = Column(DateTime(timezone=True), server_default=func.now())
-    end = Column(DateTime(timezone=True), server_default=func.now() + timedelta(minute=15))
+    end = Column(DateTime(timezone=True), server_default=func.now())
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
@@ -47,7 +47,7 @@ class Checkin(Base): #a Lecture consists of many check-in sessions
     id = Column(Integer, primary_key=True)
     course_id = Column(Integer, ForeignKey('courses.id'), nullable = False) 
     lecture_id = Column(Integer, ForeignKey('lectures.id'), nullable = False)   
-    user_id = Column(Integer, ForeignKey("user.id"), nullable = False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable = False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 

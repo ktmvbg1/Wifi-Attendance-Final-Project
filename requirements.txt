@@ -4,3 +4,4 @@ uvicorn
 bcrypt
 passlib
 python-jose
+pymysql
