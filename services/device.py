@@ -7,15 +7,31 @@ def add_device(session, user_id, mac_address, ip_address):
     if device:
         return (False, 'device already exists')
     new_device = UserDevice(
-        name=user_id, mac_address=mac_address, ip_address=ip_address)
+        user_id=user_id, mac_address=mac_address, ip_address=ip_address)
     session.add(new_device)
     session.commit()
     return (True, "Created device {}".format(mac_address))
 
 
-def get_devices(session, user_id):
+def get_devices(session):
+    devices = session.query(UserDevice).all()
+    return devices
+
+
+def get_device(session, device_id):
+    device = session.query(UserDevice).filter_by(id=device_id).first()
+    return device
+
+
+def get_user_devices(session, user_id):
     devices = session.query(UserDevice).filter_by(user_id=user_id)
     return devices
+
+
+def get_user_device(session, user_id, ip):
+    device = session.query(UserDevice).filter_by(
+        user_id=user_id, ip_address=ip).first()
+    return device
 
 
 def check_device_exists(session, user_id, mac_address):

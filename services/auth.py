@@ -37,12 +37,17 @@ def decode_token(token: str):
 
 
 def seed(session):
-    user = session.query(User).filter_by(username="admin").first()
-    if  user:
-        return
-    admin = User(username="admin", fullname="admin",password=get_password_hash("admin"), account_type=2)
-    session.add(admin)
-    session.commit()
+    admin = session.query(User).filter_by(username="admin").first()
+    if  not admin:
+        admin = User(username="admin", fullname="admin",password=get_password_hash("admin"), account_type=2)
+        session.add(admin)
+        session.commit()
+    
+    user = session.query(User).filter_by(username="user").first()
+    if  not user:
+        user = User(username="user", fullname="user",password=get_password_hash("user"), account_type=1)
+        session.add(user)
+        session.commit()
 
 
 def login(session, username, password):
@@ -84,6 +89,6 @@ def check_is_teacher(session, user_id):
     user = session.query(User).filter_by(id=user_id).first()
     if not user:
         return False
-    if user.role_id != 2:
+    if user.account_type != 2:
         return False
     return True

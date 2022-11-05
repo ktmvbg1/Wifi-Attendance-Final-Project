@@ -53,8 +53,9 @@ class Checkin(Base): #a Lecture consists of many check-in sessions
 
 class UserDevice(Base): # a user can have many devices
     __tablename__ = 'user_devices'  
-    user_id = Column(Integer, ForeignKey('users.id'), primary_key=True)
-    mac_address = Column(String(200), primary_key=True)
+    id = Column(Integer, primary_key=True)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    mac_address = Column(String(200))
     ip_address = Column(String(200), nullable = False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())

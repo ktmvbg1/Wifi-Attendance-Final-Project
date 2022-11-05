@@ -4,7 +4,8 @@ from fastapi import FastAPI, Request, HTTPException, Depends, status
 from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordBearer
 from db import get_session
-from services import auth, user
+from models import User
+from services import auth, user, device
 from jose import JWTError
 
 
@@ -35,3 +36,21 @@ async def get_current_user(token: str = Depends(oauth2_scheme), session: Session
     if user_data is None:
         raise credentials_exception
     return user_data
+
+async def teacher_endpoints(token: str = Depends(oauth2_scheme), session: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    credentials_exception = HTTPException(
+        status_code=status.HTTP_403_FORBIDDEN,
+        detail="Unauthorized",
+        headers={"WWW-Authenticate": "Bearer"},
+    )
+    is_teacher = auth.check_is_teacher(session, current_user.id)
+    if not is_teacher:
+        raise credentials_exception
+
+def get_client_ip(request: Request):
+    return request.client.host
+
+async def filter_request(request: Request, session: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    ip = get_client_ip(request)
+    d = device.get_user_device(session, current_user.id, ip)
+    return d
