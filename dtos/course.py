@@ -9,3 +9,7 @@ class CreateCourseInput(BaseModel):
 class UpdateCourseInput(BaseModel):
     name: Optional[str]
     description: Optional[str]
+
+class EnrollCourseInput(BaseModel):
+    users: list[int]
+    

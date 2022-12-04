@@ -1,7 +1,7 @@
 
 from fastapi import FastAPI, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from routers import auth, devices, courses
+from routers import auth, devices, courses, lectures
 
 app = FastAPI()
 
@@ -21,7 +21,7 @@ app.add_middleware(
 app.include_router(auth.router)
 app.include_router(devices.router)
 app.include_router(courses.router)
-
+app.include_router(lectures.router)
 @app.on_event("startup")
 async def startup():
     print("Hello")

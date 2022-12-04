@@ -17,10 +17,13 @@ class User(Base):
     fullname = Column(String(200), nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
-    
-    courses = relationship("CourseUsers", back_populates="user", cascade="all, delete")
-    checkins = relationship("Checkin", back_populates="user", cascade="all, delete")
-    devices = relationship("UserDevice", back_populates="user", cascade="all, delete")
+
+    courses = relationship(
+        "CourseUsers", back_populates="user", cascade="all, delete")
+    checkins = relationship(
+        "Checkin", back_populates="user", cascade="all, delete")
+    devices = relationship(
+        "UserDevice", back_populates="user", cascade="all, delete")
 
 
 class Course(Base):
@@ -30,10 +33,15 @@ class Course(Base):
     description = Column(String(2000), nullable=True)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
-    
-    lectures = relationship("Lecture", back_populates="course", cascade="all, delete")
-    sessions = relationship("Session", back_populates="course", cascade="all, delete")
-    checkins = relationship("Checkin", back_populates="course", cascade="all, delete")
+
+    users = relationship(
+        "CourseUsers", back_populates="course", cascade="all, delete")
+    lectures = relationship(
+        "Lecture", back_populates="course", cascade="all, delete")
+    sessions = relationship(
+        "Session", back_populates="course", cascade="all, delete")
+    checkins = relationship(
+        "Checkin", back_populates="course", cascade="all, delete")
 
 
 class Lecture(Base):  # a course consists of many lectures
@@ -47,8 +55,11 @@ class Lecture(Base):  # a course consists of many lectures
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     course = relationship("Course")
-    sessions = relationship("Session", back_populates="lecture", cascade="all, delete")
-    checkins = relationship("Checkin", back_populates="lecture", cascade="all, delete")
+    sessions = relationship(
+        "Session", back_populates="lecture", cascade="all, delete")
+    checkins = relationship(
+        "Checkin", back_populates="lecture", cascade="all, delete")
+
 
 class Session(Base):
     __tablename__ = 'sessions'
@@ -66,7 +77,8 @@ class Session(Base):
 
     course = relationship("Course")
     lecture = relationship("Lecture")
-    checkins = relationship("Checkin", back_populates="session", cascade="all, delete")
+    checkins = relationship(
+        "Checkin", back_populates="session", cascade="all, delete")
 
 
 class Checkin(Base):  # a Lecture consists of many check-in sessions
@@ -81,7 +93,7 @@ class Checkin(Base):  # a Lecture consists of many check-in sessions
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
-    
+
     user = relationship("User")
     course = relationship("Course")
     lecture = relationship("Lecture")
@@ -103,12 +115,12 @@ class UserDevice(Base):  # a user can have many devices
 class CourseUsers(Base):  # a user can have many courses
     __tablename__ = 'course_users'
     user_id = Column(Integer, ForeignKey(
-        'users.id', ondelete="CASCADE"), primary_key=True)
+        'users.id'), primary_key=True)
     course_id = Column(Integer, ForeignKey(
-        'courses.id', ondelete="CASCADE"), primary_key=True)
+        'courses.id'), primary_key=True)
     role_id = Column(Integer, nullable=False)  # 1 = student, 2 = teacher
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
-    user = relationship("User")
-    course = relationship("Course")
+    user = relationship("User", back_populates="courses")
+    course = relationship("Course", back_populates="users")
