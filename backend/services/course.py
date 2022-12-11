@@ -94,3 +94,14 @@ def get_enrolled_users(session, user_id, course_id):
     users = [UserOutput(x.user) for x in course_users]
     return (True, users)
 
+def get_lectures(session, user_id, course_id):
+    if not check_access_course(session, user_id, course_id):
+        return (False, "Forbidden")
+    lectures = session.query(Lecture).filter_by(course_id=course_id).all()
+    return (True, lectures)
+
+def get_sessions(session, user_id, course_id):
+    if not check_access_course(session, user_id, course_id):
+        return (False, "Forbidden")
+    sessions = session.query(Session).filter_by(course_id=course_id).all()
+    return (True, sessions)

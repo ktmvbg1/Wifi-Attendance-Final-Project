@@ -3,11 +3,14 @@ from models import *
 from services.auth import check_permission
 
 
-def add_session(session, user_id, course_id, lecture_id, name, start=None, end=None):
-    if not check_permission(session, user_id, course_id):
+def add_session(session, user_id, lecture_id, name, description, start=None, end=None):
+    lecture = session.query(Lecture).filter_by(id=lecture_id).first()
+    if (not lecture):
+        return (False, "Not found")
+    if not check_permission(session, user_id, lecture.course_id):
         return (False, "Forbidden")
 
-    new_session = Session(name=name, course_id=course_id,
+    new_session = Session(name=name, course_id=lecture.course_id, description=description,
                           lecture_id=lecture_id)
     if (start):
         new_session.start = start

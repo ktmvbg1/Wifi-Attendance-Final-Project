@@ -17,7 +17,6 @@ async def get_all_lectures(session: Session = Depends(get_db), user: User = Depe
     return data
 
 
-
 @router.get("/{lecture_id}")
 async def get_lecture(lecture_id: int, session: Session = Depends(get_db), user: User = Depends(get_current_user)):
     success, data = lecture.get_lecture(session, user.id, lecture_id)
@@ -26,23 +25,29 @@ async def get_lecture(lecture_id: int, session: Session = Depends(get_db), user:
 
 @router.post("/")
 async def create_lecture(input: CreateLectureInput, session: Session = Depends(get_db), user: User = Depends(get_current_user)):
-    success, data = lecture.add_lecture(session, user.id, input.course_id, input.name, input.description)
+    success, data = lecture.add_lecture(
+        session, user.id, input.course_id, input.name, input.description)
     if success:
         return {"success": True, "data": data}
     raise HTTPException(
         status_code=status.HTTP_400_BAD_REQUEST,
         headers={"WWW-Authenticate": "Bearer"},
+        detail=data
     )
+
 
 @router.patch("/{lecture_id}")
 async def edit_lecture(lecture_id: int, input: UpdateLectureInput, session: Session = Depends(get_db), user: User = Depends(get_current_user)):
-    success, data = lecture.update_lecture(session, user.id, lecture_id, input.course_id, input.name, input.description)
+    success, data = lecture.update_lecture(
+        session, user.id, lecture_id, input.course_id, input.name, input.description)
     if success:
         return {"success": True, "data": data}
     raise HTTPException(
         status_code=status.HTTP_400_BAD_REQUEST,
         headers={"WWW-Authenticate": "Bearer"},
+        detail=data
     )
+
 
 @router.delete("/{lecture_id}")
 async def delete_lecture(lecture_id: int, session: Session = Depends(get_db), user: User = Depends(get_current_user)):
@@ -52,4 +57,17 @@ async def delete_lecture(lecture_id: int, session: Session = Depends(get_db), us
     raise HTTPException(
         status_code=status.HTTP_400_BAD_REQUEST,
         headers={"WWW-Authenticate": "Bearer"},
+        detail=data
+    )
+
+
+@router.get("/{lecture_id}/sessions")
+async def get_lecture_sessions(lecture_id: int, session: Session = Depends(get_db), user: User = Depends(get_current_user)):
+    success, data = lecture.get_sessions(session, user.id, lecture_id)
+    if success:
+        return {"success": True, "data": data}
+    raise HTTPException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        headers={"WWW-Authenticate": "Bearer"},
+        detail=data
     )

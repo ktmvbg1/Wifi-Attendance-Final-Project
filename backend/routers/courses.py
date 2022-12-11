@@ -84,3 +84,13 @@ async def unenroll_course(course_id: int, input: EnrollCourseInput, session: Ses
 async def get_enrolled_users(course_id: int, session: Session = Depends(get_db), user: User = Depends(get_current_user)):
     success, data = course.get_enrolled_users(session, user.id, course_id)
     return data
+
+@router.get("/{course_id}/lectures")
+async def get_course_lectures(course_id: int, session: Session = Depends(get_db), user: User = Depends(get_current_user)):
+    success, data = course.get_lectures(session, user.id, course_id)
+    return data
+
+@router.get("/{course_id}/sessions")
+async def get_course_sessions(course_id: int, session: Session = Depends(get_db), user: User = Depends(get_current_user)):
+    success, data = course.get_sessions(session, user.id, course_id)
+    return data

@@ -57,3 +57,12 @@ def delete_lecture(session, user_id, lecture_id):
     session.delete(lecture)
     session.commit()
     return (True, "Deleted lecture {}".format(lecture_id))
+
+def get_sessions(session, user_id, lecture_id):
+    lecture = session.query(Lecture).filter_by(id=lecture_id).first()
+    if(not lecture):
+        return (False, "Not Found")
+    if not check_permission(session, user_id, lecture.course_id):
+        return (False, "Forbidden")
+    sessions = session.query(Session).filter_by(lecture_id=lecture_id).all()
+    return (True, sessions)
