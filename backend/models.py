@@ -72,9 +72,11 @@ class Session(Base):
     description = Column(String(2000), nullable=True)
     start = Column(DateTime(timezone=True), server_default=func.now())
     end = Column(DateTime(timezone=True), server_default=func.now())
+    teacher_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
+    teacher = relationship("User")
     course = relationship("Course")
     lecture = relationship("Lecture")
     checkins = relationship(

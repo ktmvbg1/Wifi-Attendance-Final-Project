@@ -31,7 +31,7 @@ async def create_course(input: CreateCourseInput, session: Session = Depends(get
     raise HTTPException(
         status_code=status.HTTP_400_BAD_REQUEST,
         headers={"WWW-Authenticate": "Bearer"},
-        data = data
+        detail = data
     )
 
 @router.patch("/{course_id}")
@@ -42,7 +42,7 @@ async def edit_course(course_id: int, input: UpdateCourseInput, session: Session
     raise HTTPException(
         status_code=status.HTTP_400_BAD_REQUEST,
         headers={"WWW-Authenticate": "Bearer"},
-        data = data
+        detail = data
     )
 
 @router.delete("/{course_id}")
@@ -53,7 +53,7 @@ async def delete_course(course_id: int, session: Session = Depends(get_db), user
     raise HTTPException(
         status_code=status.HTTP_400_BAD_REQUEST,
         headers={"WWW-Authenticate": "Bearer"},
-        data = data
+        detail = data
     )
 
 @router.post("/{course_id}/enroll")
@@ -65,7 +65,7 @@ async def enroll_course(course_id: int, input: EnrollCourseInput, session: Sessi
     raise HTTPException(
         status_code=status.HTTP_400_BAD_REQUEST,
         headers={"WWW-Authenticate": "Bearer"},
-        data = data
+        detail = data
     )
 
 @router.delete("/{course_id}/enroll")
@@ -77,7 +77,7 @@ async def unenroll_course(course_id: int, input: EnrollCourseInput, session: Ses
     raise HTTPException(
         status_code=status.HTTP_400_BAD_REQUEST,
         headers={"WWW-Authenticate": "Bearer"},
-        data = data
+        detail = data
     )
 
 @router.get("/{course_id}/enroll")
