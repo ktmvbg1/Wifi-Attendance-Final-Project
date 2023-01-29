@@ -102,3 +102,30 @@ def get_attendees(session, user_id, session_id):
 
     attendees = session.query(Checkin).filter_by(session_id=session_id).all()
     return (True, attendees)
+
+def update_attendee(session, user_id, session_id, attendee_id, checkin_time=None):
+    l_session = session.query(Session).filter_by(id=session_id).first()
+    if (not l_session):
+        return (False, "Not found")
+    if not check_permission(session, user_id, l_session.course_id):
+        return (False, "Forbidden")
+    if(checkin_time == None):
+        checkin_time = datetime.now()
+    check_if_exists = session.query(Checkin).filter_by(user_id=attendee_id, session_id=session_id).first()
+    if(check_if_exists):
+        check_if_exists.created_at = checkin_time
+        session.commit()
+        return (True, "Updated attendee")
+    
+    checkin = Checkin(user_id=attendee_id, session_id=session_id, course_id=l_session.course_id, lecture_id=l_session.lecture_id, created_at=checkin_time)
+    session.add(checkin)
+    session.commit()
+    return (True, "Added attendee")
+
+def get_checkin_history(session, user_id):
+    checkins = session.query(Checkin).filter_by(user_id=user_id).all()
+    return (True, checkins)
+
+def get_course_checkin_history(session, user_id, course_id):
+    checkins = session.query(Checkin).filter_by(course_id=course_id, user_id=user_id).all()
+    return (True, checkins)

@@ -1,6 +1,6 @@
 from models import *
 from services.auth import check_access_course, check_is_teacher, check_permission
-from dtos.user import UserOutput
+from dtos.user import UserCourseOutput
 
 def add_course(session, user_id, course_name, description):
     if not check_is_teacher(session, user_id):
@@ -87,11 +87,24 @@ def unenroll_course(session, teacher_id, course_id, users):
     session.commit()
     return (True, "Remove {} users from course {}".format(count, course_id))
 
+def update_course_role(session, user_id, course_id, user_id_to_update, role_id):
+    if(role_id not in [1, 2]):
+        return (False, "Invalid role")
+    if not check_permission(session, user_id, course_id):
+        return (False, "Forbidden")
+    course_user = session.query(CourseUsers).filter_by(course_id=course_id, user_id=user_id_to_update).first()
+    if not course_user:
+        return (False, "User does not exist in course")
+    course_user.role_id = role_id
+    session.commit()
+    return (True, "Updated role of user {} in course {}".format(user_id_to_update, course_id))
+
+
 def get_enrolled_users(session, user_id, course_id):
     if not check_access_course(session, user_id, course_id):
         return (False, "Forbidden")
     course_users = session.query(CourseUsers).filter_by(course_id=course_id).all()
-    users = [UserOutput(x.user) for x in course_users]
+    users = [UserCourseOutput(x.user, x.role_id) for x in course_users]
     return (True, users)
 
 def get_lectures(session, user_id, course_id):

@@ -88,3 +88,4 @@ async def reset_password(user_id: int, password: str, session: Session = Depends
         headers={"WWW-Authenticate": "Bearer"},
         detail=data
     )
+

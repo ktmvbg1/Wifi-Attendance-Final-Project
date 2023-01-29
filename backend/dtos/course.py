@@ -12,4 +12,7 @@ class UpdateCourseInput(BaseModel):
 
 class EnrollCourseInput(BaseModel):
     users: list[int]
-    
+
+class UpdateCourseRoleInput(BaseModel):
+    role_id: int
+    user_id: int

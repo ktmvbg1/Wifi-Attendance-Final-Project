@@ -11,6 +11,31 @@ router = APIRouter(prefix="/api/sessions",
                    tags=["sessions"], dependencies=[Depends(filter_request)])
 
 
+@router.get("/history")
+async def get_session_history(db_session: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    success, data = session_service.get_checkin_history(
+        db_session, current_user.id)
+    if success:
+        return {"success": True, "data": data}
+    raise HTTPException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        headers={"WWW-Authenticate": "Bearer"},
+        detail=data
+    )
+
+@router.get("/history/{course_id}")
+async def get_session_history(course_id: int, db_session: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    success, data = session_service.get_course_checkin_history(
+        db_session, current_user.id, course_id)
+    if success:
+        return {"success": True, "data": data}
+    raise HTTPException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        headers={"WWW-Authenticate": "Bearer"},
+        detail=data
+    )
+
+
 @router.get("/active-sessions")
 async def get_active_sessions(db_session: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     success, data = session_service.get_active_sessions(
@@ -112,6 +137,19 @@ async def get_attendees(session_id: int, db_session: Session = Depends(get_db), 
         attendees = [Attendee(id=checkin_data.user.id, name=checkin_data.user.fullname, username=checkin_data.user.username,
                               account_type=checkin_data.user.account_type, checkin_time=checkin_data.created_at) for checkin_data in data]
         return {"success": True, "data": attendees}
+    raise HTTPException(
+        status_code=status.HTTP_400_BAD_REQUEST,
+        headers={"WWW-Authenticate": "Bearer"},
+        detail=data
+    )
+
+
+@router.patch("/{session_id}/attendees/{user_id}")
+async def update_attendee(session_id: int, user_id: int, db_session: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    success, data = session_service.update_attendee(
+        db_session, current_user.id, session_id, user_id)
+    if success:
+        return {"success": True, "data": data}
     raise HTTPException(
         status_code=status.HTTP_400_BAD_REQUEST,
         headers={"WWW-Authenticate": "Bearer"},
