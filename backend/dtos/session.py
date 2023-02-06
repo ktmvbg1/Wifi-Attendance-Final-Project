@@ -27,6 +27,17 @@ class SessionOutput(BaseModel):
     course_name: str
     lecture_id: int
     lecture_name: str
+
+class CheckinOutput(BaseModel):
+    id: int
+    user_id: int
+    session_id: int
+    session_name: str
+    lecture_id: int
+    lecture_name: str
+    course_id: int
+    course_name: str
+    created_at: datetime
     
     
 
